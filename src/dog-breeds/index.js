@@ -1,8 +1,9 @@
 import React,{useEffect,useState} from 'react';
 import {flatDawgs} from './helpers/flatten-dogs';
+import SadDawg from './sadPuppy.png'
 
 function DogBreeds(){
-  const [fullPicSet, setFullPicSet] = useState()
+  const [fullPicSet, setFullPicSet] = useState([])
   const [pics,setPics] = useState([])
   const [dogString, setDogString] = useState()
 
@@ -35,6 +36,14 @@ function DogBreeds(){
     const filtered = fullPicSet.filter(dog => {
       return dog.name.includes(string)
     })
+    if(!filtered.length){
+      setPics([
+        {
+          name: "No Dog Found",
+          pic: SadDawg
+        }
+      ])
+    }
     setPics(filtered)
   }
 
@@ -45,7 +54,7 @@ function DogBreeds(){
     filterDogs(string)
   }
 
-  if(!pics.length){
+  if(!fullPicSet.length){
     return (
       <h1>Here come the breeds</h1>
     )
@@ -65,6 +74,13 @@ function DogBreeds(){
             </div>
           )
         })}
+        {!pics.length? 
+          <div style={{margin:"0px 2px"}}>
+              <p style={{alignSelf:"center", width:"80%",margin:"25px auto 0px auto",padding:"8px 0px", borderTop:"1px solid black"}}>No dogs match</p>
+              <img style={{height:"300px", width:"300px", objectFit:"cover", border:"10px solid black"}} src={SadDawg} alt="sad dog"/>
+          </div>
+          : null
+        }
       </div>
     </>
   )
