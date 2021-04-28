@@ -2,8 +2,9 @@ import React,{useEffect,useState} from 'react';
 import {flatDawgs} from './helpers/flatten-dogs';
 
 function DogBreeds(){
-
+  const [fullPicSet, setFullPicSet] = useState()
   const [pics,setPics] = useState([])
+  const [dogString, setDogString] = useState()
 
   useEffect(() => {
     fetch("https://dog.ceo/api/breeds/list/all")
@@ -18,13 +19,30 @@ function DogBreeds(){
             return {name:d, pic:message}
           })
       }))
-      .then(data => setPics(data))
+      .then(data => {
+        setPics(data)
+        setFullPicSet(data)
+      })
     })
     .catch(e => console.log('errorss',e))
   },[])
 
   const filterDogs = string => {
-    console.log("strang", string)
+    if(!string){
+      setPics(fullPicSet)
+      return
+    }
+    const filtered = fullPicSet.filter(dog => {
+      return dog.name.includes(string)
+    })
+    setPics(filtered)
+  }
+
+  const handleSearchInput = e => {
+    e.preventDefault()
+    const string = e.target.value;
+    setDogString(string)
+    filterDogs(string)
   }
 
   if(!pics.length){
@@ -33,19 +51,22 @@ function DogBreeds(){
     )
   }
   return (
-          <>
-          <div style={{margin:"0px auto"}}>Search</div>
-    <div style={{display:"flex",flexWrap:"wrap", justifyContent:"center"}}>
-      {pics.map(dog => {
-        return (
-          <div>
-            <p style={{alignSelf:"center", width:"80%",margin:"25px auto 0px auto",padding:"7px 0px", borderTop:"1px solid black"}}>{dog.name}</p>
-            <img style={{height:"300px", width:"300px", objectFit:"cover", border:"10px solid black"}} src={dog.pic} alt={dog.name}/>
-          </div>
-        )
-      })}
-    </div>
-          </>
+    <>
+      <div style={{margin:"0px auto"}}>
+        <h2>Search Dogs</h2>
+        <input type="text" value={dogString} onChange={handleSearchInput}></input>
+      </div>
+      <div style={{display:"flex",flexWrap:"wrap", justifyContent:"center"}}>
+        {pics.map(dog => {
+          return (
+            <div style={{margin:"0px 2px"}}>
+              <p style={{alignSelf:"center", width:"80%",margin:"25px auto 0px auto",padding:"8px 0px", borderTop:"1px solid black"}}>{dog.name}</p>
+              <img style={{height:"300px", width:"300px", objectFit:"cover", border:"10px solid black"}} src={dog.pic} alt={dog.name}/>
+            </div>
+          )
+        })}
+      </div>
+    </>
   )
 }
 
