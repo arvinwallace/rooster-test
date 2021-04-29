@@ -10,7 +10,7 @@ export const useDogFilter = ({setPics, fullPicSet}) => {
       return
     }
     const filtered = fullPicSet.filter(dog => {
-      return dog.name.includes(string)
+      return dog.name.includes(string.toLowerCase())
     })
     setPics(filtered)
   }

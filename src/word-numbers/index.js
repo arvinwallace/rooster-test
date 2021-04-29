@@ -15,7 +15,6 @@ function wordToNum(string){
     nine: 9
   }
   const numRay = string.split(";").map(n => numberMap[n])
-  console.log(numRay)
   return numRay.join("")
 }
 
